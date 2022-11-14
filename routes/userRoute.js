@@ -258,7 +258,7 @@ router.patch('/add_Exersice', function (req, res)
   });
 });
 // -------------------------------- user delete api ---------------------------------
-router.delete("/delete", middle, function (req, rets)
+router.delete("/delete", middle, function (req, res)
 {
   console.log(req.body)
   User.deleteOne({ email: req.body.email }, function (data, err)
