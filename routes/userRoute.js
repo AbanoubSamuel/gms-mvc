@@ -513,4 +513,16 @@ router.patch('/assignclienttotrainer', (req, res) =>
     })
 })
 
+
+
+router.get("/allattendance", middle, async (req, res) => {
+  await Attendce.find({}).then((data, err) => {
+    data = data.map((i) => {
+      return { date: i.data, length: i.attendce.length };
+    });
+    res.send(data);
+  });
+});
+
+
 module.exports = router;
