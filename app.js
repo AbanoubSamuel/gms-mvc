@@ -33,188 +33,188 @@ const io = require("socket.io")(http, {
 });
 //Socket Structure
 
-let adminNotificationArray = [];
-let clientNotificationArray = [];
-let onlineUsers = [];
+// let adminNotificationArray = [];
+// let clientNotificationArray = [];
+// let onlineUsers = [];
 
-const addNewUser = (email, socketId) =>
-{
-  !onlineUsers.some((user) => user.email === email) &&
-    onlineUsers.push({ email, socketId });
-};
-const removeUser = (socketId) =>
-{
-  onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
-};
-const getUser = (email) =>
-{
-  return onlineUsers.find((user) => user.email === email);
-};
-function adminNotfyMsg(msg, email)
-{
-  adminNotificationArray.push(`${msg} ${email} ${new Date().toLocaleString()}`);
-}
-function clientNotfyMsg(msg, email)
-{
-  clientNotificationArray.push(
-    `${msg} ${email} ${new Date().toLocaleString()}`
-  );
-}
-// Init The Socket
-io.on("connection", function (socket)
-{
-  console.log("A user connected");
-  console.log("socket.id");
+// const addNewUser = (email, socketId) =>
+// {
+//   !onlineUsers.some((user) => user.email === email) &&
+//     onlineUsers.push({ email, socketId });
+// };
+// const removeUser = (socketId) =>
+// {
+//   onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
+// };
+// const getUser = (email) =>
+// {
+//   return onlineUsers.find((user) => user.email === email);
+// };
+// function adminNotfyMsg(msg, email)
+// {
+//   adminNotificationArray.push(`${msg} ${email} ${new Date().toLocaleString()}`);
+// }
+// function clientNotfyMsg(msg, email)
+// {
+//   clientNotificationArray.push(
+//     `${msg} ${email} ${new Date().toLocaleString()}`
+//   );
+// }
+// // Init The Socket
+// io.on("connection", function (socket)
+// {
+//   console.log("A user connected");
+//   console.log("socket.id");
 
-  // console.log(adminNotificationArray);
+//   // console.log(adminNotificationArray);
 
-  // Client Sockets
+//   // Client Sockets
 
-  // Order Socket
-  socket.on("Order", (email) =>
-  {
-    console.log("first");
-    console.log(email);
-    console.log(socket.id);
-    addNewUser(email, socket.id);
-    adminNotfyMsg("New Order from", email);
-    console.log(adminNotificationArray);
-    const sender = getUser(email);
-    console.log(sender);
-    // io.to(sender.socketId).emit("orderResponse", "Order Placed");
-    io.emit("Admin Notifications", adminNotificationArray);
-  });
+//   // Order Socket
+//   socket.on("Order", (email) =>
+//   {
+//     console.log("first");
+//     console.log(email);
+//     console.log(socket.id);
+//     addNewUser(email, socket.id);
+//     adminNotfyMsg("New Order from", email);
+//     console.log(adminNotificationArray);
+//     const sender = getUser(email);
+//     console.log(sender);
+//     // io.to(sender.socketId).emit("orderResponse", "Order Placed");
+//     io.emit("Admin Notifications", adminNotificationArray);
+//   });
 
-  // Trainer Sockets
+//   // Trainer Sockets
 
-  // Add Exercise
-  socket.on("addExercise", (email) =>
-  {
-    console.log(email);
-    console.log(socket.id);
-    addNewUser(email, socket.id);
-    adminNotfyMsg("New Exercise added from", email);
-    console.log(adminNotificationArray);
-    const sender = getUser(email);
-    console.log(sender);
-    // io.to(sender.socketId).emit(
-    //   "addExerciseResponse",
-    //   "Exercise added successfully"
-    // );
-  });
+//   // Add Exercise
+//   socket.on("addExercise", (email) =>
+//   {
+//     console.log(email);
+//     console.log(socket.id);
+//     addNewUser(email, socket.id);
+//     adminNotfyMsg("New Exercise added from", email);
+//     console.log(adminNotificationArray);
+//     const sender = getUser(email);
+//     console.log(sender);
+//     // io.to(sender.socketId).emit(
+//     //   "addExerciseResponse",
+//     //   "Exercise added successfully"
+//     // );
+//   });
 
-  // Update Exercise
-  socket.on("updateExercise", (email) =>
-  {
-    console.log(email);
-    console.log(socket.id);
-    addNewUser(email, socket.id);
-    adminNotfyMsg("Exercise updated from", email);
-    console.log(adminNotificationArray);
-    const sender = getUser(email);
-    console.log(sender);
-    // io.to(sender.socketId).emit(
-    //   "updateExerciseResponse",
-    //   "Exercise updated successfully"
-    // );
-  });
+//   // Update Exercise
+//   socket.on("updateExercise", (email) =>
+//   {
+//     console.log(email);
+//     console.log(socket.id);
+//     addNewUser(email, socket.id);
+//     adminNotfyMsg("Exercise updated from", email);
+//     console.log(adminNotificationArray);
+//     const sender = getUser(email);
+//     console.log(sender);
+//     // io.to(sender.socketId).emit(
+//     //   "updateExerciseResponse",
+//     //   "Exercise updated successfully"
+//     // );
+//   });
 
-  // delete Exercise
-  socket.on("deleteExercise", (email) =>
-  {
-    console.log(email);
-    console.log(socket.id);
-    addNewUser(email, socket.id);
-    adminNotfyMsg("Exercise deleted from", email);
-    console.log(adminNotificationArray);
-    const sender = getUser(email);
-    console.log(sender);
-    // io.to(sender.socketId).emit(
-    //   "deleteExerciseResponse",
-    //   "Exercise deleted successfully"
-    // );
-  });
+//   // delete Exercise
+//   socket.on("deleteExercise", (email) =>
+//   {
+//     console.log(email);
+//     console.log(socket.id);
+//     addNewUser(email, socket.id);
+//     adminNotfyMsg("Exercise deleted from", email);
+//     console.log(adminNotificationArray);
+//     const sender = getUser(email);
+//     console.log(sender);
+//     // io.to(sender.socketId).emit(
+//     //   "deleteExerciseResponse",
+//     //   "Exercise deleted successfully"
+//     // );
+//   });
 
-  // Assign Exercise
-  socket.on("assignExercise", (email) =>
-  {
-    console.log(email);
-    console.log(socket.id);
-    addNewUser(email, socket.id);
-    clientNotfyMsg("New assigned Exercises from", email);
-    console.log(clientNotificationArray);
-    const sender = getUser(email);
-    console.log(sender);
-    io.to(sender.socketId).emit(
-      "assignExerciseResponse",
-      "Exercise assigned successfully"
-    );
-  });
+//   // Assign Exercise
+//   socket.on("assignExercise", (email) =>
+//   {
+//     console.log(email);
+//     console.log(socket.id);
+//     addNewUser(email, socket.id);
+//     clientNotfyMsg("New assigned Exercises from", email);
+//     console.log(clientNotificationArray);
+//     const sender = getUser(email);
+//     console.log(sender);
+//     io.to(sender.socketId).emit(
+//       "assignExerciseResponse",
+//       "Exercise assigned successfully"
+//     );
+//   });
 
-  // Add Food
-  socket.on("addFood", (email) =>
-  {
-    console.log(email);
-    console.log(socket.id);
-    addNewUser(email, socket.id);
-    adminNotfyMsg("New Food added from", email);
-    console.log(adminNotificationArray);
-    const sender = getUser(email);
-    console.log(sender);
-    io.to(sender.socketId).emit(
-      "addFoodResponse",
-      "New Healthy-Food added successfully"
-    );
-  });
+//   // Add Food
+//   socket.on("addFood", (email) =>
+//   {
+//     console.log(email);
+//     console.log(socket.id);
+//     addNewUser(email, socket.id);
+//     adminNotfyMsg("New Food added from", email);
+//     console.log(adminNotificationArray);
+//     const sender = getUser(email);
+//     console.log(sender);
+//     io.to(sender.socketId).emit(
+//       "addFoodResponse",
+//       "New Healthy-Food added successfully"
+//     );
+//   });
 
-  // Update Food
-  socket.on("updateFood", (email) =>
-  {
-    console.log(email);
-    console.log(socket.id);
-    addNewUser(email, socket.id);
-    adminNotfyMsg("Food updated from", email);
-    console.log(adminNotificationArray);
-    const sender = getUser(email);
-    console.log(sender);
-    // io.to(sender.socketId).emit(
-    //   "updateFoodResponse",
-    //   "Healthy-Food updated successfully"
-    // );
-  });
+//   // Update Food
+//   socket.on("updateFood", (email) =>
+//   {
+//     console.log(email);
+//     console.log(socket.id);
+//     addNewUser(email, socket.id);
+//     adminNotfyMsg("Food updated from", email);
+//     console.log(adminNotificationArray);
+//     const sender = getUser(email);
+//     console.log(sender);
+//     // io.to(sender.socketId).emit(
+//     //   "updateFoodResponse",
+//     //   "Healthy-Food updated successfully"
+//     // );
+//   });
 
-  // delete Food
-  socket.on("deleteFood", (email) =>
-  {
-    console.log(email);
-    console.log(socket.id);
-    addNewUser(email, socket.id);
-    adminNotfyMsg("Food deleted from", email);
-    console.log(adminNotificationArray);
-    const sender = getUser(email);
-    console.log(sender);
-    // io.to(sender.socketId).emit(
-    //   "deleteFoodResponse",
-    //   "Healthy-Food deleted successfully"
-    // );
-  });
+//   // delete Food
+//   socket.on("deleteFood", (email) =>
+//   {
+//     console.log(email);
+//     console.log(socket.id);
+//     addNewUser(email, socket.id);
+//     adminNotfyMsg("Food deleted from", email);
+//     console.log(adminNotificationArray);
+//     const sender = getUser(email);
+//     console.log(sender);
+//     // io.to(sender.socketId).emit(
+//     //   "deleteFoodResponse",
+//     //   "Healthy-Food deleted successfully"
+//     // );
+//   });
 
-  // Assign Healty-Food
+//   // Assign Healty-Food
 
-  // Admin Socket
-  socket.emit("Admin Notifications", adminNotificationArray);
-  socket.on("Clear Notifications", (msg) =>
-  {
-    adminNotificationArray = [];
-    console.log(adminNotificationArray);
-  });
+//   // Admin Socket
+//   socket.emit("Admin Notifications", adminNotificationArray);
+//   socket.on("Clear Notifications", (msg) =>
+//   {
+//     adminNotificationArray = [];
+//     console.log(adminNotificationArray);
+//   });
 
-  // Remove User
-  socket.on("disconnect", () =>
-  {
-    removeUser(socket.id);
-  });
-});
+//   // Remove User
+//   socket.on("disconnect", () =>
+//   {
+//     removeUser(socket.id);
+//   });
+// });
 // app.use(bcrypt)
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
