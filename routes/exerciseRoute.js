@@ -101,7 +101,7 @@ router.patch("/editEx",upload.single('exStaticImage'),function(req,res,next){
     console.log(id)
     console.log("ttttttttttt");
 
-       var exStaticImage= req.file.path;
+       var exStaticImage= req.file?.path;
        var exerciseName = req.body.exerciseName;
        var exBodyPart = req.body.exBodyPart;
        var exTools = req.body.exTools;

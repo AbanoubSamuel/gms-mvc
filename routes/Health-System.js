@@ -117,7 +117,7 @@ router.patch("/update", upload.single('imgFood'), function (req, res, next)
     var foodTime = req.body.foodTime;
     var foodType = req.body.foodType;
     var foodIng = req.body.ingredients;
-    var foodPic = req.file.path;
+    var foodPic = req.file?.path;
     console.log(foodPic)
     healthyFood.findById(id, function (err, data)
     {
