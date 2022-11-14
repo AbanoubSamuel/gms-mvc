@@ -599,4 +599,20 @@ router.patch("/assignclienttotrainer", (req, res) => {
   );
 });
 
+<<<<<<< HEAD
 module.exports = router;
+=======
+
+
+router.get("/allattendance", middle, async (req, res) => {
+  await Attendce.find({}).then((data, err) => {
+    data = data.map((i) => {
+      return { date: i.data, length: i.attendce.length };
+    });
+    res.send(data);
+  });
+});
+
+
+module.exports = router;
+>>>>>>> 3b86a3cad2c6094f3c516fff7e2aaa6ffe96e4ea
