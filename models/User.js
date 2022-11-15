@@ -8,7 +8,11 @@ const userSchema = new mongoose.Schema({
   profileImage:
     { type: String },
   age:
-    { type: Number, min: 13 },
+    { type: Number },
+  weight:
+    { type: Number },
+  height:
+    { type: Number },
   firstName:
     { type: String, minlength: 3, maxlength: 15 },
   lastName:
@@ -34,16 +38,12 @@ const userSchema = new mongoose.Schema({
     { type: String },
   phoneNumber:
     { type: String, min: 11 },
-  weight:
-    { type: Number },
-  height:
-    { type: Number },
   orders:
     { type: Array },
   clientIds:
     [{ type: mongoose.Types.ObjectId, ref: "User" }],
   trainerId:
-    { type: mongoose.Types.ObjectId, ref: "User"  },
+    { type: mongoose.Types.ObjectId, ref: "User" },
   createdAt:
     { type: String },
   startDate:
@@ -53,7 +53,7 @@ const userSchema = new mongoose.Schema({
   subscription:
   {
     type: String,
-    default: 'basic',
+    default: 'none',
     enum: {
       values: ['premium', 'standard', 'basic', 'none'],
       message: '{VALUE} is not supported',

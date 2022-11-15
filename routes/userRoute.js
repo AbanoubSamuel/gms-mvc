@@ -103,90 +103,9 @@ router.get("/cancel", (req, res) =>
   res.render("cancel");
 });
 
-router.get("/pp1", (req, res) =>
-{
-  res.render("index1");
-});
-var price;
-router.post("/paypal1", (req, res) =>
-{
-  console.log(req.body.item);
-  price = req.body.price;
-  var item = req.body.item;
-  var create_payment_json = {
-    intent: "sale",
-    payer: {
-      payment_method: "paypal",
-    },
-    redirect_urls: {
-      return_url: "http://localhost:8000/api/v1/users/success",
-      cancel_url: "http://localhost:8000/api/v1/users/cancel",
-    },
-    transactions: [
-      {
-        amount: {
-          currency: "USD",
-          total: price,
-        },
-        description: item,
-      },
-    ],
-  };
-  paypal.payment.create(create_payment_json, function (error, payment)
-  {
-    if (error)
-    {
-      throw error;
-    } else
-    {
-      console.log("Create Payment Response");
-      console.log(payment);
 
-      res.redirect(payment.links[1].href);
-    }
-  });
-});
 
-router.get("/success", (req, res) =>
-{
-  var payerID = req.query.PayerID;
-  var paymentId = req.query.paymentId;
-  var execute_payment_json = {
-    payer_id: payerID,
-    transactions: [
-      {
-        amount: {
-          currency: "USD",
-          total: price,
-        },
-      },
-    ],
-  };
-  console.log(execute_payment_json);
-  paypal.payment.execute(
-    paymentId,
-    execute_payment_json,
-    function (error, payment)
-    {
-      if (error)
-      {
-        console.log(error.response);
-        throw error;
-      } else
-      {
-        res.render("success");
 
-        console.log("Get Payment Response");
-        console.log(JSON.stringify(payment));
-        res.render("success");
-      }
-    }
-  );
-});
-router.get("/cancel", (req, res) =>
-{
-  res.render("cancel");
-});
 
 //---------------------------------------------------- multer ------------------------------------------//
 // const path = require("path");
@@ -235,54 +154,56 @@ router.get("/view", function (req, res)
   });
 });
 
-router.patch(
-  "/updateSettings",
-  middle,
-  upload.single("profileImage"),
-  function (req, res, next)
+router.patch("/updateSettings", middle, upload.single("profileImage"), function (req, res, next)
+{
+  console.log(req.body);
+  let email = { email: decryptedToken };
+  console.log("email", email);
+  var profileImage = req.file?.path;
+  var firstName = req.body.firstName;
+  var lastName = req.body.lastName;
+  var phoneNumber = req.body.phoneNumber;
+  var address = req.body.address;
+  var bio = req.body.bio;
+  var gender = req.body.gender;
+  var age = req.body.age;
+  var height = req.body.height;
+  var weight = req.body.weight;
+
+  console.log(profileImage);
+  // data = req.body;
+  User.findOne(email, async function (err, data)
   {
-    console.log(req.body);
-    let email = { email: decryptedToken };
-    console.log("email", email);
-    var profileImage = req.file?.path;
-    var firstName = req.body.firstName;
-    var lastName = req.body.lastName;
-    var phoneNumber = req.body.phoneNumber;
-    var address = req.body.address;
-    var bio = req.body.bio;
-    var gender = req.body.gender;
+    console.log("data", data);
 
+    data.profileImage = profileImage ? profileImage : data.profileImage;
+    // data.profileImage = req.file?.path;
+    data.firstName = firstName ? firstName : data.firstName;
+    data.lastName = lastName ? lastName : data.lastName;
+    data.phoneNumber = phoneNumber ? phoneNumber : data.phoneNumber;
+    data.address = address ? address : data.address;
+    data.bio = bio ? bio : data.bio;
+    data.gender = gender ? gender : data.gender;
+    data.age = age ? age : data.age;
+    data.height = height ? height : data.height;
+    data.weight = weight ? weight : data.weight;
     console.log(profileImage);
-    // data = req.body;
-    User.findOne(email, async function (err, data)
-    {
-      console.log("data", data);
-
-      data.profileImage = profileImage ? profileImage : data.profileImage;
-      // data.profileImage = req.file?.path;
-      data.firstName = firstName ? firstName : data.firstName;
-      data.lastName = lastName ? lastName : data.lastName;
-      data.phoneNumber = phoneNumber ? phoneNumber : data.phoneNumber;
-      data.address = address ? address : data.address;
-      data.bio = bio ? bio : data.bio;
-      data.gender = gender ? gender : data.gender;
-      console.log(profileImage);
-      console.log(data);
-      await data
-        .save()
-        .then((doc) =>
-        {
-          res.status(201).json({
-            message: "Profile Image Updated Successfully",
-            results: doc,
-          });
-        })
-        .catch((err) =>
-        {
-          res.json(err);
+    console.log(data);
+    await data
+      .save()
+      .then((doc) =>
+      {
+        res.status(201).json({
+          message: "Profile Image Updated Successfully",
+          results: doc,
         });
-    });
-  }
+      })
+      .catch((err) =>
+      {
+        res.json(err);
+      });
+  });
+}
 );
 
 // -------------------------------- user register api ---------------------------------
@@ -404,7 +325,7 @@ router.patch('/addHealthyFood', function (req, res)
         foodName: req.body.foodName, foodTime: req.body.foodTime,
         foodType: req.body.foodType, ingredients: req.body.ingredients,
         imgFood: req.body.imgFood, quantity: req.body.quantity,
-        finsh:false,
+        finsh: false,
         date: new Date().toDateString()
       }
     }
@@ -571,27 +492,27 @@ router.post("/placeorder", function (req, res)
                   console.log("hi");
                   console.log(dataa.cart);
                   //---------------To be checked tomorrow 14 Nov 2022 -----------------------
-                  // for (let i of dataa.cart)
-                  // {
-                  //   products.findOne({ title: i.title }, function (err, data)
-                  //   {
-                  //     products.updateOne(
-                  //       { title: data.title },
-                  //       { quantity: data.quantity - i.count },
-                  //       function (err, data)
-                  //       {
-                  //         if (err)
-                  //         {
-                  //           res.send({
-                  //             message: "Error occureed please try again later",
-                  //           });
-                  //         } else
-                  //         {
-                  //         }
-                  //       }
-                  //     );
-                  //   });
-                  // }
+                  for (let i of dataa.cart)
+                  {
+                    products.findOne({ title: i.title }, function (err, data)
+                    {
+                      products.updateOne(
+                        { title: data.title },
+                        { quantity: data.quantity - i.count },
+                        function (err, data)
+                        {
+                          if (err)
+                          {
+                            res.send({
+                              message: "Error occureed please try again later",
+                            });
+                          } else
+                          {
+                          }
+                        }
+                      );
+                    });
+                  }
                   res.send({
                     message: "Order has been placed successfully !",
                   });
@@ -726,6 +647,33 @@ router.get("/getCode", middle, (req, res) =>
     {
       res.send(data);
     }
+  });
+});
+
+
+router.get("/attendcecharts", async (req, res) =>
+{
+  let data = await Attendce.find({});
+  if (data)
+  {
+    res.send(data)
+  }
+  else
+  {
+    res.status(402).send("no attendees");
+  }
+
+})
+
+router.get("/tootalattendce", middle, async (req, res) =>
+{
+  let date = await new Date().toDateString();
+  Attendce.findOne({ date: date }).then((data, err) =>
+  {
+    console.log(data);
+
+    let size = data?.attendce.length || 0;
+    res.send({ counter: size });
   });
 });
 
