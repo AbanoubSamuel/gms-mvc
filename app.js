@@ -249,5 +249,5 @@ app.set("views", "./Views");
 app.set("view engine", "ejs");
 app.listen(port, () => console.log(`GMS app listening on port ${port}!`));
 http.listen(socketPort, () =>
-  console.log(`Example Socket listening on port ${socketPort}!`)
+  console.log(`GMS Socket listening on port ${socketPort}!`)
 );
