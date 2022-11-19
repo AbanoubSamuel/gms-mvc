@@ -247,7 +247,7 @@ app.use("/public/profile", express.static("public/profile"));
 app.engine("ejs", engines.ejs);
 app.set("views", "./Views");
 app.set("view engine", "ejs");
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(port, () => console.log(`GMS app listening on port ${port}!`));
 http.listen(socketPort, () =>
   console.log(`Example Socket listening on port ${socketPort}!`)
 );
