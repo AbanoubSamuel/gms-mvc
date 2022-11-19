@@ -34,8 +34,8 @@ router.post("/paypal", (req, res) =>
       payment_method: "paypal",
     },
     redirect_urls: {
-      return_url: "http://10.171.224.47:8000/api/v1/users/success",
-      cancel_url: "http://10.171.224.47:8000/api/v1/users/cancel",
+      return_url: "http://10.171.224.118:8000/api/v1/users/success",
+      cancel_url: "http://10.171.224.118:8000/api/v1/users/cancel",
     },
     transactions: [
       {
@@ -160,39 +160,40 @@ router.patch("/updateSettings", middle, upload.single("profileImage"), function 
   let email = { email: decryptedToken };
   console.log("email", email);
   var profileImage = req.file?.path;
-  var firstName = req.body.firstName;
-  var lastName = req.body.lastName;
-  var phoneNumber = req.body.phoneNumber;
-  var address = req.body.address;
-  var bio = req.body.bio;
-  var gender = req.body.gender;
-  var age = req.body.age;
-  var height = req.body.height;
-  var weight = req.body.weight;
+  var firstName = req.body?.firstName;
+  var lastName = req.body?.lastName;
+  var phoneNumber = req.body?.phoneNumber;
+  var address = req.body?.address;
+  var bio = req.body?.bio;
+  var gender = req.body?.gender;
+  var age = req.body?.age;
+  var height = req.body?.height;
+  var weight = req.body?.weight;
 
-  console.log(profileImage);
+  console.log(bio);
   // data = req.body;
-  User.findOne(email, async function (err, data)
+  User.findOne(email, function (err, data)
   {
     console.log("data", data);
 
-    data.profileImage = profileImage ? profileImage : data.profileImage;
+    data.profileImage = profileImage || data.profileImage;
     // data.profileImage = req.file?.path;
-    data.firstName = firstName ? firstName : data.firstName;
-    data.lastName = lastName ? lastName : data.lastName;
-    data.phoneNumber = phoneNumber ? phoneNumber : data.phoneNumber;
-    data.address = address ? address : data.address;
-    data.bio = bio ? bio : data.bio;
-    data.gender = gender ? gender : data.gender;
-    data.age = age ? age : data.age;
-    data.height = height ? height : data.height;
-    data.weight = weight ? weight : data.weight;
+    data.firstName = firstName || data.firstName;
+    data.lastName = lastName || data.lastName;
+    data.phoneNumber = phoneNumber || data.phoneNumber;
+    data.address = address || data.address;
+    data.bio = bio || data.bio;
+    data.gender = gender || data.gender;
+    data.age = age || data.age;
+    data.height = height || data.height;
+    data.weight = weight || data.weight;
     console.log(profileImage);
     console.log(data);
-    await data
+    data
       .save()
       .then((doc) =>
       {
+        console.log("doc", doc);
         res.status(201).json({
           message: "Profile Image Updated Successfully",
           results: doc,
@@ -200,6 +201,7 @@ router.patch("/updateSettings", middle, upload.single("profileImage"), function 
       })
       .catch((err) =>
       {
+        console.log(err);
         res.json(err);
       });
   });
@@ -526,7 +528,7 @@ router.post("/placeorder", function (req, res)
   });
 });
 
-router.post("/attendce", middle, (req, res) =>
+router.post("/attendce", (req, res) =>
 {
   let code = req.body.code;
 
@@ -572,16 +574,6 @@ router.get("/attendce", middle, async (req, res) =>
 
     res.send({ code: code });
   }
-});
-
-router.get("/tootalattendce", middle, async (req, res) =>
-{
-  let date = await new Date().toDateString();
-  Attendce.findOne({ date: date }).then((data, err) =>
-  {
-    console.log(data);
-    res.send({ counter: data.attendce.length });
-  });
 });
 
 router.get("/client", function (req, res)

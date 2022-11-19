@@ -82,7 +82,7 @@ io.on("connection", function (socket)
     console.log(adminNotificationArray);
     const sender = getUser(email);
     console.log(sender);
-    io.to(sender.socketId).emit("orderResponse", "Order Placed");
+    // io.to(sender.socketId).emit("orderResponse", "Order Placed");
     io.emit("Admin Notifications", adminNotificationArray);
     console.log(adminNotificationArray);
   });
