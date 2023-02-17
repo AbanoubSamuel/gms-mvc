@@ -3,7 +3,7 @@ const express = require("express");
 const notification = require("../models/Notification");
 const router = express.Router();
 
-router.post("/create", function (req, res)
+router.post("/create", function (req, res, next)
 {
   console.log(req.body)
   notification.create(req.body, function (err, data)
@@ -20,7 +20,7 @@ router.post("/create", function (req, res)
   });
 });
 
-router.get("/", function (req, res)
+router.get("/", function (req, res, next)
 {
   notification.find().then((data) =>
   {
